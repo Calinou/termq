@@ -13,7 +13,7 @@ void Entity::render() {
  * Ray computation
  */
 
-Direction Entity::getDirection(Entity &a) {  // TODO add ref to target to Entity class (from Enemy)
+Direction Entity::getDirection(Entity &a) {
     int degrees = 0;
 
     vec2ui selfPos   = this->getPos();
