@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #include <string>
+#include <algorithm>
 
 #include "global/Global.h"  // includes difficulties
 
@@ -70,9 +71,9 @@ int startGame() {
     // Init placement of Player, Enemy, and Coins
     player.render();
     for (Enemy &enemy : enemies) {
-        printf("Player has target\n");
+        //printf("Player has target\n");
         player.addTarget(&enemy);
-        enemy.render();
+        //enemy.render();
     }
     for (auto &coin : coins) {
         wgame.draw(coin.getPos(), coin.getDispChar(), COLOR_PAIR(2));
@@ -162,21 +163,20 @@ int startGame() {
 
         // Enemy, seek out player
         string proximityAlert = "";
-        for (Enemy &enemy : enemies) {
-            if (enemy.getHP() > 0) {  // TODO some sort of alive or dead flag
-                enemy.move();
-                enemy.render();
-                if (enemy.isAdjacent(player.getPos())) {
+        //for (Enemy &enemy : enemies) {
+        for (i = 0; i < enemies.size(); i++) {
+            if (enemies[i].getHP() > 0) {  // TODO some sort of alive or dead flag
+                enemies[i].move();
+                enemies[i].render();
+                if (enemies[i].isAdjacent(player.getPos())) {
                     proximityAlert += "!";
                 }
+            } else { // pop dead enemy
+                enemies.erase(enemies.begin() + i);
             }
-        }
-
-        // XXX refactor - only gameover if hp <= 0
-        for (Enemy &enemy : enemies) {
 
             // Game Over
-            if (enemy.atop(player.getPos()) && player.getHP() <= 0) {
+            if (enemies[i].atop(player.getPos()) && player.getHP() <= 0) {
                 wgame.coloSplash(COLOR_PAIR(1));
                 wgame.refresh();
 
@@ -185,6 +185,8 @@ int startGame() {
                 break;
             }
         }
+
+        /*XXX*/printf("no enems: %zu\n", enemies.size());
 
 
         diagWin_game.push(
